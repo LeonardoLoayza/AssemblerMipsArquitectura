@@ -16,9 +16,9 @@ main:
     jal sort
 
     # Imprimir array ordenado
-    la $t2, array         # puntero actual
+    la $t2, array
     lw $t0, size
-    move $t1, $zero       # contador i = 0
+    move $t1, $zero
 print_loop:
     beq $t1, $t0, print_done
     lw $a0, 0($t2)
@@ -29,7 +29,7 @@ print_loop:
     li $v0, 4
     syscall
 
-    addi $t2, $t2, 4      # avanzar al siguiente elemento
+    addi $t2, $t2, 4
     addi $t1, $t1, 1
     j print_loop
 print_done:
@@ -41,7 +41,7 @@ end_program:
     li $v0, 10
     syscall
 
-# sort: ordena de forma recursiva del menor al mayor
+# sort: ordena de forma descendente (mayor a menor)
 sort:
     beq $a0, $a1, done
     slt $t0, $a1, $a0
@@ -51,11 +51,11 @@ sort:
     sw $ra, 0($sp)
 
     jal max
-    lw $t0, 0($a1)     # último elemento
-    sw $t0, 0($v0)     # copiar último en posición max
-    sw $v1, 0($a1)     # poner max al final
+    lw $t0, 0($a0)       # elemento al inicio
+    sw $t0, 0($v0)       # mover inicio a posición del máximo
+    sw $v1, 0($a0)       # mover máximo al inicio
+    addi $a0, $a0, 4     # nuevo inicio
 
-    addi $a1, $a1, -4
     jal sort
 
     lw $ra, 0($sp)
@@ -63,7 +63,7 @@ sort:
 done:
     jr $ra
 
-# max: encuentra la posición y valor del máximo en [$a0, $a1]
+# max: encuentra posición y valor máximo entre a0 y a1
 max:
     move $v0, $a0
     lw $v1, 0($v0)
